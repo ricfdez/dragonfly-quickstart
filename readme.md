@@ -102,7 +102,7 @@ Dragonfly is set up at this point.
 ### Testing
 
 Pulling an image back to source using Dragonfly 
-``` docker exec -i kind-worker /usr/local/bin/crictl pull ghcr.io/dragonflyoss/dragonfly2/scheduler:v2.0.5 ```
+``` docker exec -i kind-$POCD7Y /usr/local/bin/crictl pull ghcr.io/dragonflyoss/dragonfly2/scheduler:v2.0.5 ```
 
 ### References
 - [Website](https://d7y.io/docs/)
