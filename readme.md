@@ -106,14 +106,14 @@ Dragonfly is set up at this point.
 ``` docker exec -i $POCD7Y-worker /usr/local/bin/crictl pull ghcr.io/dragonflyoss/dragonfly2/scheduler:v2.0.5 ```
 2. Next, we will use Jaegger exposing its service ```kubectl --namespace dragonfly-system port-forward service/dragonfly-jaeger-query 16686:16686```.
 3. In Jaegger's [UI]( http://127.0.0.1:16686/search) search for the trace created by the tag of the previously downloaded image:  ```http.url="/v2/dragonflyoss/dragonfly2/scheduler/blobs/sha256:8a9fba45626f402c12bafaadb718690187cae6e5d56296a8fe7d7c4ce19038f7?ns=ghcr.io":```
-![](2023-08-17-18-17-50.png)
+![](.pic/../pic/2023-08-17-18-17-50.png)
 It took almost 2s for the pull operation!
 
 #### Testing the local peer cached image
 1. We delete the image from the worker node ```docker exec -i $POCD7Y-worker /usr/local/bin/crictl rmi ghcr.io/dragonflyoss/dragonfly2/scheduler:v2.0.5```
 2. Pull the image again ```docker exec -i $POCD7Y-worker /usr/local/bin/crictl pull ghcr.io/dragonflyoss/dragonfly2/scheduler:v2.0.5```
 3. Back in Jaegger's ui - we search for the same TAG:
-![Alt text](image.png)
+![Alt text](./pic/image.png)
 It took 90ms! 
 
 
