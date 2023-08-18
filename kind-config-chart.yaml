@@ -1,0 +1,40 @@
+containerRuntime:
+  containerd:
+    enable: true
+    injectConfigPath: true
+    registries:
+      - 'https://ghcr.io'
+
+scheduler:
+  replicas: 1
+  metrics:
+    enable: true
+  config:
+    verbose: true
+    pprofPort: 18066
+
+seedPeer:
+  replicas: 1
+  metrics:
+    enable: true
+  config:
+    verbose: true
+    pprofPort: 18066
+
+dfdaemon:
+  metrics:
+    enable: true
+  config:
+    verbose: true
+    pprofPort: 18066
+
+manager:
+  replicas: 1
+  metrics:
+    enable: true
+  config:
+    verbose: true
+    pprofPort: 18066
+
+jaeger:
+  enable: true

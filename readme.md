@@ -10,6 +10,7 @@ Dragonfly is a Kubernetes-native Peer-to-Peer (P2P) content delivery system. It 
 - helm
 - kind
 - kubectl
+- Make sure no corporate software signs certificates in your behalf when accessing registries. (zscaler/Anyconnect...)
 
 ### Steps
 
@@ -101,13 +102,24 @@ Dragonfly is set up at this point.
 
 ### Testing
 
-Pulling an image back to source using Dragonfly 
-``` docker exec -i kind-$POCD7Y /usr/local/bin/crictl pull ghcr.io/dragonflyoss/dragonfly2/scheduler:v2.0.5 ```
+1.  Containerd will pull the image to the source for the first time:
+``` docker exec -i $POCD7Y-worker /usr/local/bin/crictl pull ghcr.io/dragonflyoss/dragonfly2/scheduler:v2.0.5 ```
+2. Next, we will use Jaegger exposing its service ```kubectl --namespace dragonfly-system port-forward service/dragonfly-jaeger-query 16686:16686```.
+3. In Jaegger's [UI]( http://127.0.0.1:16686/search) search for the trace created by the tag of the previously downloaded image:  ```http.url="/v2/dragonflyoss/dragonfly2/scheduler/blobs/sha256:8a9fba45626f402c12bafaadb718690187cae6e5d56296a8fe7d7c4ce19038f7?ns=ghcr.io":```
+![](2023-08-17-18-17-50.png)
+It took almost 2s for the pull operation!
+
+#### Testing the local peer cached image
+1. We delete the image from the worker node ```docker exec -i $POCD7Y-worker /usr/local/bin/crictl rmi ghcr.io/dragonflyoss/dragonfly2/scheduler:v2.0.5```
+2. Pull the image again ```docker exec -i $POCD7Y-worker /usr/local/bin/crictl pull ghcr.io/dragonflyoss/dragonfly2/scheduler:v2.0.5```
+3. Back in Jaegger's ui - we search for the same TAG:
+![Alt text](image.png)
+It took 90ms! 
+
 
 ### References
 - [Website](https://d7y.io/docs/)
 - [Architecture](https://d7y.io/docs/concepts/terminology/architecture/)
-- [QuickStart](https://d7y.io/docs/getting-started/quick-start/kubernetes/)
 
 ### Glosary
 **Preheat:** Process of proactively downloading and caching container images onto nodes within a Kubernetes cluster before they are actually needed for running pods or applications. This anticipatory approach ensures that the required images are readily available on nodes, reducing the latency and time required for pods to start.
